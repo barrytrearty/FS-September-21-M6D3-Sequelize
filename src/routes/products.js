@@ -1,14 +1,24 @@
 import express from "express";
 import databaseObj from "../db/tables/index.js";
 import s from "sequelize";
+const { Op } = s;
 
-const { Products } = databaseObj;
+const { Products, Reviews, Categories, ProductCategories, Users } = databaseObj;
 
 const productsRouter = express.Router();
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const data = await Products.findAll();
+    const data = await Products.findAll({
+      include: [
+        { model: Categories, through: { attributes: [] } },
+        // { model: Reviews, through: { attributes: [] } },
+        Reviews,
+        // { model: Reviews, through: { attributes: [userId] } },
+      ],
+      // include: Users,
+    });
+
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -59,6 +69,16 @@ productsRouter.delete("/:id", async (req, res, next) => {
     } else {
       res.status(404).send("Not found");
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+productsRouter.post("/addCategory", async (req, res, next) => {
+  try {
+    const data = await ProductCategories.create(req.body);
+    res.send(data);
   } catch (error) {
     console.log(error);
     next(error);

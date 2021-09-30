@@ -4,6 +4,8 @@ import { connectDB } from "./db/index.js";
 import sequelize from "./db/index.js";
 import reviewsRouter from "./routes/reviews.js";
 import productsRouter from "./routes/products.js";
+import categoriesRouter from "./routes/categories.js";
+import usersRouter from "./routes/users.js";
 
 const server = express();
 
@@ -15,6 +17,8 @@ server.use(express.json());
 
 server.use("/products", productsRouter);
 server.use("/reviews", reviewsRouter);
+server.use("/users", usersRouter);
+server.use("/categories", categoriesRouter);
 
 server.listen(PORT, async () => {
   await connectDB();

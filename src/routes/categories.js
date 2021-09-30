@@ -1,14 +1,15 @@
 import express from "express";
 import databaseObj from "../db/tables/index.js";
 import s from "sequelize";
+const { Op } = s;
 
-const { Reviews, Products } = databaseObj;
+const { Categories } = databaseObj;
 
-const reviewsRouter = express.Router();
+const categoriesRouter = express.Router();
 
-reviewsRouter.get("/", async (req, res, next) => {
+categoriesRouter.get("/", async (req, res, next) => {
   try {
-    const data = await Reviews.findAll({ include: Products });
+    const data = await Categories.findAll();
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -16,9 +17,9 @@ reviewsRouter.get("/", async (req, res, next) => {
   }
 });
 
-reviewsRouter.post("/", async (req, res, next) => {
+categoriesRouter.post("/", async (req, res, next) => {
   try {
-    const data = await Reviews.create(req.body);
+    const data = await Categories.create(req.body);
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -26,9 +27,9 @@ reviewsRouter.post("/", async (req, res, next) => {
   }
 });
 
-reviewsRouter.get("/:id", async (req, res, next) => {
+categoriesRouter.get("/:id", async (req, res, next) => {
   try {
-    const data = await Reviews.findByPk(req.params.id);
+    const data = await Categories.findByPk(req.params.id);
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -36,9 +37,9 @@ reviewsRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-reviewsRouter.put("/:id", async (req, res, next) => {
+categoriesRouter.put("/:id", async (req, res, next) => {
   try {
-    const data = await Reviews.update(req.body, {
+    const data = await Categories.update(req.body, {
       where: {
         id: req.params.id,
       },
@@ -51,9 +52,9 @@ reviewsRouter.put("/:id", async (req, res, next) => {
   }
 });
 
-reviewsRouter.delete("/:id", async (req, res, next) => {
+categoriesRouter.delete("/:id", async (req, res, next) => {
   try {
-    const rows = await Reviews.destroy({ where: { id: req.params.id } });
+    const rows = await Categories.destroy({ where: { id: req.params.id } });
     if (rows > 0) {
       res.send("ok");
     } else {
@@ -65,4 +66,4 @@ reviewsRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
-export default reviewsRouter;
+export default categoriesRouter;

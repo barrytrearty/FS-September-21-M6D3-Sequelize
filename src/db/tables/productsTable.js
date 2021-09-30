@@ -12,7 +12,7 @@ const Products = sequelize.define("products", {
     defaultValue:
       "https://res.cloudinary.com/btrearty/image/upload/v1632321701/blogPosts/hw8ax6kxbb2vn00pi9ik.webp",
   },
-  category: { type: DataTypes.STRING, allowNull: false },
+  // category: { type: DataTypes.STRING, allowNull: false },
 });
 
 export default Products;
