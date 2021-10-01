@@ -38,6 +38,9 @@ ItemsInShoppingCart.belongsTo(Users);
 //   through: { model: "shoppingCart", unique: false },
 // });
 
+Products.hasMany(ItemsInShoppingCart);
+ItemsInShoppingCart.belongsTo(Products);
+
 export default {
   Products,
   Reviews,

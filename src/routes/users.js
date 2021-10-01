@@ -32,9 +32,9 @@ usersRouter.post("/", async (req, res, next) => {
 usersRouter.get("/:id", async (req, res, next) => {
   try {
     const data = await Users.findAll({
-      // include: [Products],
-      include: [ItemsInShoppingCart, Products],
-      // where: { userId: req.params.id },
+      // include: [Products, ItemsInShoppingCart],
+      include: [Products],
+      where: { id: req.params.id },
     });
     console.log(data);
     res.send(data);

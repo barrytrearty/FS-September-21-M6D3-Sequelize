@@ -8,18 +8,10 @@ const cartRouter = express.Router();
 
 cartRouter.route("/:userId").get(async (req, res, next) => {
   try {
-    const data = await ItemsInShoppingCart
-      .findAll
-      // {
-      // where: { userId: req.params.userId },
-      // include: Products,
-      //   attributes: [
-      //     "productId",
-      //     [sequelize.fn("count", sequelize.col("product.id")), "unitary_qty"],
-      //   ],
-      //   group: ["productId", "product.id"],
-      // }
-      ();
+    const data = await ItemsInShoppingCart.findAll({
+      where: { userId: req.params.userId },
+      include: Products,
+    });
 
     res.send(data);
   } catch (error) {
