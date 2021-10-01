@@ -11,8 +11,7 @@ const usersRouter = express.Router();
 
 usersRouter.get("/", async (req, res, next) => {
   try {
-    const data = await Users.findAll();
-
+    const data = await Users.findAll({ include: [Products] });
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -32,21 +31,13 @@ usersRouter.post("/", async (req, res, next) => {
 
 usersRouter.get("/:id", async (req, res, next) => {
   try {
-    // const data = await Users.findByPk(req.params.id);
-    const data = await Users.findOne({
-      where: { id: req.params.id },
-      include: Products,
-      // include: { model: Products, through: { attributes: [] } },
+    const data = await Users.findAll({
+      // include: [Products],
+      include: [ItemsInShoppingCart, Products],
+      // where: { userId: req.params.id },
     });
-
-    // const totalSum = await Products.findOne({
-    //   where: { userId: req.params.id },
-    //   // include: Users,
-    //   // attributes: ["price", [s.fn("count", sequelize.col("id"))]],
-    // });
-
+    console.log(data);
     res.send(data);
-    // res.send(totalSum);
   } catch (error) {
     console.log(error);
     next(error);

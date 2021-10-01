@@ -31,6 +31,13 @@ Products.belongsToMany(Users, {
 Users.hasMany(ItemsInShoppingCart);
 ItemsInShoppingCart.belongsTo(Users);
 
+// Products.belongsToMany(ItemsInShoppingCart, {
+//   through: { model: "shoppingCart", unique: false },
+// });
+// ItemsInShoppingCart.belongsToMany(Products, {
+//   through: { model: "shoppingCart", unique: false },
+// });
+
 export default {
   Products,
   Reviews,
