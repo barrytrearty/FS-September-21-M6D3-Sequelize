@@ -3,13 +3,15 @@ import databaseObj from "../db/tables/index.js";
 import s from "sequelize";
 const { Op } = s;
 
-const { Categories } = databaseObj;
+const { Categories, Products } = databaseObj;
 
 const categoriesRouter = express.Router();
 
 categoriesRouter.get("/", async (req, res, next) => {
   try {
-    const data = await Categories.findAll();
+    const data = await Categories.findAll({
+      include: { model: Products, through: { attributes: [] } },
+    });
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -29,7 +31,11 @@ categoriesRouter.post("/", async (req, res, next) => {
 
 categoriesRouter.get("/:id", async (req, res, next) => {
   try {
-    const data = await Categories.findByPk(req.params.id);
+    const data = await Categories.findOne({
+      where: { id: req.params.id },
+      // include: Products,
+      include: { model: Products, through: { attributes: [] } },
+    });
     res.send(data);
   } catch (error) {
     console.log(error);

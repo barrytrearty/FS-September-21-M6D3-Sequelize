@@ -1,7 +1,7 @@
 import express from "express";
 import databaseObj from "../db/tables/index.js";
 import s from "sequelize";
-const { Op } = s;
+const { Op, fn } = s;
 
 const { Products, Reviews, Categories, ProductCategories, Users } = databaseObj;
 
@@ -10,15 +10,16 @@ const productsRouter = express.Router();
 productsRouter.get("/", async (req, res, next) => {
   try {
     const data = await Products.findAll({
+      offset: req.query.offset,
+      limit: 5,
+      where: req.query.text
+        ? { name: { [Op.iLike]: `%${req.query.text}%` } }
+        : {},
       include: [
         { model: Categories, through: { attributes: [] } },
-        // { model: Reviews, through: { attributes: [] } },
-        Reviews,
-        // { model: Reviews, through: { attributes: [userId] } },
+        { model: Reviews, include: Users },
       ],
-      // include: Users,
     });
-
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -38,7 +39,13 @@ productsRouter.post("/", async (req, res, next) => {
 
 productsRouter.get("/:id", async (req, res, next) => {
   try {
-    const data = await Products.findByPk(req.params.id);
+    const data = await Products.findOne({
+      where: { id: req.params.id },
+      include: [
+        { model: Categories, through: { attributes: [] } },
+        { model: Reviews, include: Users },
+      ],
+    });
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -75,9 +82,10 @@ productsRouter.delete("/:id", async (req, res, next) => {
   }
 });
 
-productsRouter.post("/addCategory", async (req, res, next) => {
+productsRouter.post("/:id/addCategory", async (req, res, next) => {
   try {
-    const data = await ProductCategories.create(req.body);
+    const prodCatObj = { ...req.body, productId: req.params.id };
+    const data = await ProductCategories.create(prodCatObj);
     res.send(data);
   } catch (error) {
     console.log(error);

@@ -1,9 +1,11 @@
 import express from "express";
 import databaseObj from "../db/tables/index.js";
 import s from "sequelize";
+import sequelize from "../db/index.js";
+// import ItemsInShoppingCart from "../db/tables/ItemsInShoppingCart.js";
 const { Op } = s;
 
-const { Users } = databaseObj;
+const { Users, Products, ItemsInShoppingCart } = databaseObj;
 
 const usersRouter = express.Router();
 
@@ -30,8 +32,21 @@ usersRouter.post("/", async (req, res, next) => {
 
 usersRouter.get("/:id", async (req, res, next) => {
   try {
-    const data = await Users.findByPk(req.params.id);
+    // const data = await Users.findByPk(req.params.id);
+    const data = await Users.findOne({
+      where: { id: req.params.id },
+      include: Products,
+      // include: { model: Products, through: { attributes: [] } },
+    });
+
+    // const totalSum = await Products.findOne({
+    //   where: { userId: req.params.id },
+    //   // include: Users,
+    //   // attributes: ["price", [s.fn("count", sequelize.col("id"))]],
+    // });
+
     res.send(data);
+    // res.send(totalSum);
   } catch (error) {
     console.log(error);
     next(error);
@@ -61,6 +76,17 @@ usersRouter.delete("/:id", async (req, res, next) => {
     } else {
       res.status(404).send("Not found");
     }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+usersRouter.post("/:id/addProduct", async (req, res, next) => {
+  try {
+    const prodCatObj = { ...req.body, userId: req.params.id };
+    const data = await ItemsInShoppingCart.create(prodCatObj);
+    res.send(data);
   } catch (error) {
     console.log(error);
     next(error);
