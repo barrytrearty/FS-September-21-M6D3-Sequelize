@@ -13,7 +13,28 @@ cartRouter.route("/:userId").get(async (req, res, next) => {
       include: Products,
     });
 
+    // const amount = await ItemsInShoppingCart.count({
+    //   where: { userId: req.params.userId },
+    //   include: Products,
+    // });
+
     res.send(data);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+cartRouter.delete("/:id", async (req, res, next) => {
+  try {
+    const rows = await ItemsInShoppingCart.destroy({
+      where: { id: req.params.id },
+    });
+    if (rows > 0) {
+      res.send("ok");
+    } else {
+      res.status(404).send("Not found");
+    }
   } catch (error) {
     console.log(error);
     next(error);
