@@ -15,17 +15,17 @@ Reviews.belongsTo(Users);
 // Products.belongsToMany(Categories, { through: "productCategories" });
 
 Categories.belongsToMany(Products, {
-  through: { model: "productCategories", unique: false },
+  through: { model: ProductCategories, unique: false },
 });
 Products.belongsToMany(Categories, {
-  through: { model: "productCategories", unique: false },
+  through: { model: ProductCategories, unique: false },
 });
 
 Users.belongsToMany(Products, {
-  through: { model: "shoppingCart", unique: false },
+  through: { model: ItemsInShoppingCart, unique: false },
 });
 Products.belongsToMany(Users, {
-  through: { model: "shoppingCart", unique: false },
+  through: { model: ItemsInShoppingCart, unique: false },
 });
 
 Users.hasMany(ItemsInShoppingCart);
