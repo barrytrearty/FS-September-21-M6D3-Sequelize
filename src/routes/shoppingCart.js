@@ -20,15 +20,29 @@ cartRouter.route("/:userId").get(async (req, res, next) => {
     //   include: Products,
     // });
 
+    // const betterData = await ItemsInShoppingCart.findAll({
+    //   where: { userId: req.params.userId },
+    //   include: {
+    //     model: Products,
+    //     through: {
+    //       attributes: [
+    //         Products.name,
+    //         // Products.price,
+    //         // sequelize.fn("COUNT", sequelize.col("price")),
+    //       ],
+    //     },
+    //   },
+    // });
+
     // const data = await ItemsInShoppingCart.count({
     //   where: { userId: req.params.userId },
     // });
 
-    const totalItems = await ItemsInShoppingCart.count();
+    // const totalItems = await ItemsInShoppingCart.count();
 
     res.send({ totalItems, ...data });
 
-    // res.send(data);
+    res.send(betterData);
   } catch (error) {
     console.log(error);
     next(error);
