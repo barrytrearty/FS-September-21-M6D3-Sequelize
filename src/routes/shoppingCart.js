@@ -1,8 +1,9 @@
 import express from "express";
 import databaseObj from "../db/tables/index.js";
 import sequelize from "sequelize";
+const { Op } = sequelize;
 
-const { ItemsInShoppingCart, Products } = databaseObj;
+const { ItemsInShoppingCart, Products, Users } = databaseObj;
 
 const cartRouter = express.Router();
 
@@ -13,12 +14,21 @@ cartRouter.route("/:userId").get(async (req, res, next) => {
       include: Products,
     });
 
-    // const amount = await ItemsInShoppingCart.count({
+    // const data = await ItemsInShoppingCart.findAll({
+    //   attributes: ["price"],
     //   where: { userId: req.params.userId },
     //   include: Products,
     // });
 
-    res.send(data);
+    // const data = await ItemsInShoppingCart.count({
+    //   where: { userId: req.params.userId },
+    // });
+
+    const totalItems = await ItemsInShoppingCart.count();
+
+    res.send({ totalItems, ...data });
+
+    // res.send(data);
   } catch (error) {
     console.log(error);
     next(error);
